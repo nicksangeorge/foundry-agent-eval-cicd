@@ -1,3 +1,5 @@
+> **Disclaimer:** Provided diagrams, documents, and code are provided AS IS without warranty of any kind and should not be interpreted as an offer or commitment on the part of Microsoft, and Microsoft cannot guarantee the accuracy of any information presented. MICROSOFT MAKES NO WARRANTIES, EXPRESS OR IMPLIED, IN THIS DIAGRAM(s) DOCUMENT(s) CODE SAMPLE(s).
+
 # Microsoft Foundry — Agent Evaluation Gate
 
 A GitHub Actions pipeline that blocks PRs when an agent configuration change drops below quality or safety thresholds.

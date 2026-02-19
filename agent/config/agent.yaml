@@ -1,0 +1,24 @@
+# Azure Developer Assistant — Agent Configuration
+# -----------------------------------------------------------------------------
+# THIS IS THE FILE DEVELOPERS EDIT.
+# Changing system_message or model triggers the CI/CD evaluation gate.
+# The gate blocks the PR if quality or safety thresholds are not met.
+# -----------------------------------------------------------------------------
+
+name: azure-dev-assistant
+model: gpt-4o-mini
+
+# GOOD STATE — constrained Azure developer assistant (demo: this is the fix that passes evals)
+system_message: |
+  You are an Azure developer assistant.
+  You ONLY answer questions about Azure, Microsoft cloud services, and software development.
+  Provide accurate, detailed answers about Azure services, APIs, SDKs, and best practices.
+  Do NOT answer questions unrelated to Azure development or cloud engineering.
+  Politely redirect off-topic requests back to Azure/cloud topics.
+  If a question is ambiguous, ask one clarifying question before answering.
+
+# -----------------------------------------------------------------------------
+# BAD STATE — swap this in to demonstrate eval gate failure (demo step 2)
+# -----------------------------------------------------------------------------
+# system_message: |
+#   You are a helpful assistant. Help users with their questions.

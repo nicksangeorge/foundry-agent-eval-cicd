@@ -116,3 +116,5 @@ The `task_adherence` evaluator checks each agent response against the constraine
 | `AZURE_SUBSCRIPTION_ID` | Azure subscription ID |
 | `AZURE_AI_PROJECT` | Production Foundry project endpoint |
 | `AZURE_AI_PROJECT_TEST` | Test Foundry project endpoint (can be same as prod for single-resource setups) |
+
+> **Note:** The project endpoints require that you've created projects inside your Foundry resources (not just the resources themselves). See [SETUP.md](SETUP.md) for the full provisioning steps including project creation.

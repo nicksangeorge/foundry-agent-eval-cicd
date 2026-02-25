@@ -36,12 +36,15 @@ TEST_NAME="my-agent-demo-test"
 az group create --name $RESOURCE_GROUP --location $LOCATION
 
 # Create Foundry resources (AIServices kind = New Foundry)
+# --custom-domain and --allow-project-management are required for project creation later
 az cognitiveservices account create \
   --name $PROD_NAME \
   --resource-group $RESOURCE_GROUP \
   --kind AIServices \
   --sku S0 \
   --location $LOCATION \
+  --custom-domain $PROD_NAME \
+  --allow-project-management \
   --yes
 
 az cognitiveservices account create \
@@ -50,8 +53,34 @@ az cognitiveservices account create \
   --kind AIServices \
   --sku S0 \
   --location $LOCATION \
+  --custom-domain $TEST_NAME \
+  --allow-project-management \
   --yes
 ```
+
+#### Create projects inside each resource
+
+Creating the `AIServices` resource alone is **not** enough — you must create a project inside each resource. The Evals API, Agent Service, and project endpoints won't work until a project exists.
+
+```bash
+az cognitiveservices account project create \
+  --name $PROD_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --project-name $PROD_NAME \
+  --location $LOCATION
+
+az cognitiveservices account project create \
+  --name $TEST_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --project-name $TEST_NAME \
+  --location $LOCATION
+```
+
+> **Tip:** If you already created your resources without `--custom-domain` or `--allow-project-management`, you can add them after the fact:
+> ```bash
+> az cognitiveservices account update --name $PROD_NAME --resource-group $RESOURCE_GROUP --custom-domain $PROD_NAME
+> az cognitiveservices account update --name $PROD_NAME --resource-group $RESOURCE_GROUP --allow-project-management
+> ```
 
 > **Important:** This demo requires the **New Foundry** portal (`AIServices` kind resource). Classic Azure OpenAI resources are not supported. The Evals API is only available on `services.ai.azure.com` endpoints.
 

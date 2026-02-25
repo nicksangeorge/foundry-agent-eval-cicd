@@ -1,4 +1,4 @@
-azure-ai-projects>=2.0.0b1
+azure-ai-projects==2.0.0b3
 azure-identity>=1.19.0
-openai>=1.0.0
+openai==2.21.0
 pyyaml>=6.0

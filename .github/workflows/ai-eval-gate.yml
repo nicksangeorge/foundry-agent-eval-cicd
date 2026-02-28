@@ -65,7 +65,7 @@ jobs:
       - name: Run evaluation gate (test environment)
         id: eval
         env:
-          # AZURE_AI_PROJECT_TEST = test Foundry resource endpoint.
+          # AZURE_AI_PROJECT_TEST = test Microsoft Foundry resource endpoint.
           # For v1 (single resource), set this to the same value as AZURE_AI_PROJECT.
           # For v2 (separate resources), point at the dedicated test resource.
           AZURE_AI_PROJECT: ${{ secrets.AZURE_AI_PROJECT_TEST }}
@@ -138,6 +138,6 @@ jobs:
 
       - name: Deploy approved agent to production
         env:
-          # AZURE_AI_PROJECT = production Foundry resource endpoint
+          # AZURE_AI_PROJECT = production Microsoft Foundry resource endpoint
           AZURE_AI_PROJECT: ${{ secrets.AZURE_AI_PROJECT }}
         run: python agent/agent_client.py

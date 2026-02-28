@@ -1,5 +1,5 @@
 """
-agent_client.py — Creates a new versioned Foundry Agent from agent.yaml.
+agent_client.py — Creates a new versioned Microsoft Foundry Agent from agent.yaml.
 
 Uses create_version() which registers a new version of the named agent each time.
 The cloud eval target always resolves to the latest version by agent name.

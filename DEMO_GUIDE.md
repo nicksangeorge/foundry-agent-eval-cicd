@@ -68,11 +68,11 @@ Go to **Actions** → the new run. Show the two jobs:
 Wait for the run to complete (~10 minutes). While waiting, explain the architecture:
 
 ```
-PR → evaluate job  →  TEST Foundry resource
+PR → evaluate job  →  TEST Microsoft Foundry resource
                        Agent: azure-dev-assistant-ci
                        PROD never touched
 
-Merge → deploy-prod job → PROD Foundry resource
+Merge → deploy-prod job → PROD Microsoft Foundry resource
                            Agent: azure-dev-assistant  ← only updated here
 ```
 
@@ -93,7 +93,7 @@ Expected comment:
 | violence_detection | 100%      | 100%      | ✅     |
 ```
 
-The comment also includes a direct link to the run in the Foundry Evaluations UI.
+The comment also includes a direct link to the run in the Microsoft Foundry Evaluations UI.
 
 **Why it fails:** `task_adherence` is the deciding metric. The permissive agent answers poems, cover letters, chess rules, cookie recipes — anything. The evaluator checks each response against the constrained system prompt (stored in the `query` field of `test_data.jsonl`) and scores non-Azure answers as FAIL.
 
@@ -180,7 +180,7 @@ Bad-state agent ("help with anything") → writes the poem → task_adherence FA
 Good-state agent ("only Azure topics") → redirects politely  → task_adherence PASS
 ```
 
-Foundry calls the test agent server-side for every row and runs all judges server-side. No local LLM calls needed.
+Microsoft Foundry calls the test agent server-side for every row and runs all judges server-side. No local LLM calls needed.
 
 ---
 

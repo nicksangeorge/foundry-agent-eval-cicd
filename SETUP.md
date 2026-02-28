@@ -15,10 +15,10 @@ This guide walks through manually provisioning the Azure resources needed to run
 
 ## 1. Create Microsoft Foundry Resources
 
-This demo uses two Foundry resources: one for **production** and one for **test** (used by the CI evaluate job on PRs). For a minimal setup, you can point both at the same resource.
+This demo uses two Microsoft Foundry resources: one for **production** and one for **test** (used by the CI evaluate job on PRs). For a minimal setup, you can point both at the same resource.
 
 ### Option A — Single resource (simplest)
-Use the same Foundry resource for both prod and test. Set both `AZURE_AI_PROJECT` and `AZURE_AI_PROJECT_TEST` secrets to the same endpoint.
+Use the same Microsoft Foundry resource for both prod and test. Set both `AZURE_AI_PROJECT` and `AZURE_AI_PROJECT_TEST` secrets to the same endpoint.
 
 ### Option B — Separate prod and test resources (recommended)
 Isolates the CI evaluate job from the production environment.
@@ -35,7 +35,7 @@ TEST_NAME="my-agent-demo-test"
 # Create resource group
 az group create --name $RESOURCE_GROUP --location $LOCATION
 
-# Create Foundry resources (AIServices kind = New Foundry)
+# Create Microsoft Foundry resources (AIServices kind = New Microsoft Foundry)
 # --custom-domain and --allow-project-management are required for project creation later
 az cognitiveservices account create \
   --name $PROD_NAME \
@@ -82,7 +82,7 @@ az cognitiveservices account project create \
 > az cognitiveservices account update --name $PROD_NAME --resource-group $RESOURCE_GROUP --allow-project-management
 > ```
 
-> **Important:** This demo requires the **New Foundry** portal (`AIServices` kind resource). Classic Azure OpenAI resources are not supported. The Evals API is only available on `services.ai.azure.com` endpoints.
+> **Important:** This demo requires the **New Microsoft Foundry** portal (`AIServices` kind resource). Classic Azure OpenAI resources are not supported. The Evals API is only available on `services.ai.azure.com` endpoints.
 
 ---
 
@@ -123,7 +123,7 @@ az cognitiveservices account deployment create \
 
 ```bash
 # Format: https://<resource-name>.services.ai.azure.com/api/projects/<project-name>
-# The project name is typically the same as the resource name for new Foundry resources.
+# The project name is typically the same as the resource name for new Microsoft Foundry resources.
 
 az cognitiveservices account show \
   --name $PROD_NAME \
@@ -152,14 +152,14 @@ az ad sp create-for-rbac \
 
 Save the output. You'll need `clientId`, `clientSecret`, and `tenantId` for GitHub secrets.
 
-### Grant the SP access to Foundry Agent Service
+### Grant the SP access to Microsoft Foundry Agent Service
 
-The service principal needs permission to create agents in Foundry:
+The service principal needs permission to create agents in Microsoft Foundry:
 
 ```bash
 SP_OBJECT_ID=$(az ad sp show --id <clientId-from-above> --query id -o tsv)
 
-# Assign Azure AI User role on the Foundry resources
+# Assign Azure AI User role on the Microsoft Foundry resources
 az role assignment create \
   --assignee $SP_OBJECT_ID \
   --role "Azure AI User" \
@@ -211,7 +211,7 @@ cp .env.example .env
 # Authenticate
 az login
 
-# Create the agent in Foundry
+# Create the agent in Microsoft Foundry
 python -m agent.agent_client
 
 # Run the evaluation gate locally

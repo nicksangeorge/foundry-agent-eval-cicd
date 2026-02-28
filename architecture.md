@@ -13,19 +13,19 @@ flowchart TD
     PR["Developer opens PR<br/>changes agent.yaml"] --> GA["GitHub Actions triggered<br/>on: pull_request<br/>paths: agent/ evals/"]
 
     subgraph eval["Job 1 — evaluate  (runs on PR)"]
-        GA --> AC["agent_client.py<br/>Creates azure-dev-assistant-ci<br/>in TEST Foundry from agent.yaml"]
-        AC --> EV["run_eval_gate.py<br/>Creates eval + run via<br/>Foundry Evals API"]
-        EV --> CS["Foundry calls test agent<br/>server-side for each test row<br/>azure_ai_agent target"]
+        GA --> AC["agent_client.py<br/>Creates azure-dev-assistant-ci<br/>in TEST Microsoft Foundry from agent.yaml"]
+        AC --> EV["run_eval_gate.py<br/>Creates eval + run via<br/>Microsoft Foundry Evals API"]
+        EV --> CS["Microsoft Foundry calls test agent<br/>server-side for each test row<br/>azure_ai_agent target"]
         CS --> JD["Cloud judge evaluators<br/>run server-side<br/>no local LLM calls needed"]
         JD --> TR{"Pass rates meet<br/>eval_thresholds.json?"}
         TR -->|All pass| OK["exit 0<br/>PR unblocked"]
         TR -->|Any fail| BL["exit 1<br/>PR blocked"]
-        OK --> CM["PR comment posted<br/>scores + Foundry portal link"]
+        OK --> CM["PR comment posted<br/>scores + Microsoft Foundry portal link"]
         BL --> CM
     end
 
     subgraph deploy["Job 2 — deploy-prod  (runs on merge to main ONLY)"]
-        OK -->|After merge| DP["agent_client.py<br/>Updates azure-dev-assistant<br/>in PROD Foundry<br/>new immutable version created"]
+        OK -->|After merge| DP["agent_client.py<br/>Updates azure-dev-assistant<br/>in PROD Microsoft Foundry<br/>new immutable version created"]
     end
 
     BL -->|PROD never touched| X[Production agent unchanged]
@@ -39,7 +39,7 @@ foundry-agent-eval-cicd/
 │   └── workflows/
 │       └── ai-eval-gate.yml         # CI/CD trigger: PR (evaluate) + push to main (deploy-prod)
 ├── agent/
-│   ├── agent_client.py              # Creates/updates Foundry agent from agent.yaml
+│   ├── agent_client.py              # Creates/updates Microsoft Foundry agent from agent.yaml
 │   └── config/
 │       └── agent.yaml               # THE file developers edit — system_message and model
 ├── evals/
@@ -55,13 +55,13 @@ foundry-agent-eval-cicd/
 
 ## 2. Evaluation Data Flow — Cloud Eval API
 
-The evaluation runs entirely server-side on Azure. No local LLM calls. No `eval_target.py` callable needed. The Foundry eval service calls the test agent directly for each test row.
+The evaluation runs entirely server-side on Azure. No local LLM calls. No `eval_target.py` callable needed. The Microsoft Foundry eval service calls the test agent directly for each test row.
 
 ```mermaid
 flowchart LR
     A["test_data.jsonl<br/>18 rows<br/>user_input + query fields"]
 
-    subgraph Azure["Foundry Evals API — services.ai.azure.com/openai/v1/"]
+    subgraph Azure["Microsoft Foundry Evals API — services.ai.azure.com/openai/v1/"]
         AG["Test agent called server-side<br/>azure_ai_agent target<br/>azure-dev-assistant-ci (TEST)"]
         EV["Built-in judge evaluators<br/>all run server-side<br/>no local models needed"]
     end
@@ -78,7 +78,7 @@ flowchart LR
     Azure --> Foundry
 ```
 
-**API notes:** New Foundry (AIServices kind) exposes the Evals API at `https://<resource>.services.ai.azure.com/openai/v1/`. `run_eval_gate.py` uses `openai.AzureOpenAI(base_url=...)` and calls `client.evals.create()` + `client.evals.runs.create()`. Results appear in the Foundry portal's **Evaluations** tab — the same view as portal-triggered evals. The `run.report_url` returned by the SDK is a direct link to that specific run. This is **not** the same as `azure.ai.evaluation.evaluate()`, which runs evaluators locally.
+**API notes:** New Microsoft Foundry (AIServices kind) exposes the Evals API at `https://<resource>.services.ai.azure.com/openai/v1/`. `run_eval_gate.py` uses `openai.AzureOpenAI(base_url=...)` and calls `client.evals.create()` + `client.evals.runs.create()`. Results appear in the Microsoft Foundry portal's **Evaluations** tab — the same view as portal-triggered evals. The `run.report_url` returned by the SDK is a direct link to that specific run. This is **not** the same as `azure.ai.evaluation.evaluate()`, which runs evaluators locally.
 
 **How it works:** `test_data.jsonl` has two fields per row — `user_input` (sent to the agent, plain question) and `query` (conversation with the constrained system prompt + question, used by judge evaluators). The agent only sees `user_input`. Constrained agents redirect off-topic questions → high `task_adherence`. Permissive agents answer anything → low score.
 
@@ -150,7 +150,7 @@ Gate the `evaluate` job on a required reviewer approval before it can start.
 | Layer | Technology | Purpose |
 |---|---|---|
 | **Language** | Python | All agent code, eval scripts, CI gate |
-| **Agent hosting** | Microsoft Foundry Agent Service | Foundry-native prompt-based agents; versioned deployments |
+| **Agent hosting** | Microsoft Foundry Agent Service | Microsoft Foundry-native prompt-based agents; versioned deployments |
 | **Agent model** | `gpt-4o-mini` | Demo agent model |
 | **Evaluation SDK** | `azure-ai-projects >= 2.0.0b1` (Azure OpenAI Evals API) | Cloud eval runs — no local LLM needed |
 | **Judge model** | `gpt-4o` | Evaluation judge; separate deployment from agent model |
@@ -188,7 +188,7 @@ Same architecture, no CI changes needed — swap in a different model deployment
 
 ### Agent Observability — BYOA Pattern
 
-For custom agents running outside Foundry (containers, AKS, etc.) that need traces in the Foundry control plane:
+For custom agents running outside Microsoft Foundry (containers, AKS, etc.) that need traces in the Microsoft Foundry control plane:
 
 ```mermaid
 flowchart TD
@@ -198,7 +198,7 @@ flowchart TD
 
     Agent --> BSP[BatchSpanProcessor]
     BSP --> AME[AzureMonitorTraceExporter]
-    AME --> AI["Azure Application Insights<br/>(linked to Foundry project)"]
+    AME --> AI["Azure Application Insights<br/>(linked to Microsoft Foundry project)"]
     AI --> FT["Microsoft Foundry<br/>Operate → Tracing"]
 ```
 

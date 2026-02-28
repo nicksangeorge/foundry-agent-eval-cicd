@@ -1,11 +1,11 @@
 """
 run_eval_gate.py — Cloud evaluation gate for the Azure Developer Assistant agent.
 
-Uses the NEW Foundry cloud eval API (azure-ai-projects>=2.0.0b1) via
+Uses the NEW Microsoft Foundry cloud eval API (azure-ai-projects>=2.0.0b1) via
 project_client.get_openai_client() → openai_client.evals.*
 
 Does NOT use azure-ai-evaluation, eval_target.py, or local LLM calls.
-The Foundry service calls the agent and runs all judges server-side.
+The Microsoft Foundry service calls the agent and runs all judges server-side.
 
 Exits:
   0 — all thresholds passed  (PR can merge)
@@ -180,8 +180,8 @@ def main():
 
         report_url = getattr(eval_run, "report_url", None)
         if report_url:
-            print(f"\nFoundry portal: {report_url}")
-            _append_step_summary(f"[View full results in Azure AI Foundry]({report_url})\n\n")
+            print(f"\nMicrosoft Foundry portal: {report_url}")
+            _append_step_summary(f"[View full results in Microsoft Foundry]({report_url})\n\n")
 
         if eval_run.status == "failed":
             print("Eval run failed (infrastructure error).")
